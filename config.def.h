@@ -19,7 +19,7 @@
 static const unsigned int borderpx = 0; /* border pixel of windows */
 static const int corner_radius = 10;
 #else
-static const unsigned int borderpx = 1; /* border pixel of windows */
+static const unsigned int borderpx = 0; /* border pixel of windows */
 #endif // ROUNDED_CORNERS_PATCH
 #if BAR_BORDER_PATCH
 /* This allows the bar border size to be explicitly set separately from
@@ -266,6 +266,29 @@ static char scratchnormbordercolor[] = "#77547E";
 static char scratchnormfloatcolor[] = "#77547E";
 #endif // RENAMED_SCRATCHPADS_PATCH
 
+#if BAR_COLORFULTAGS_PATCH
+static char tag1fgcolor[] = "#f92672";
+static char tag1bgcolor[] = "#272822";
+static char tag2fgcolor[] = "#a6e22e";
+static char tag2bgcolor[] = "#272822";
+static char tag3fgcolor[] = "#f4bf75";
+static char tag3bgcolor[] = "#272822";
+static char tag4fgcolor[] = "#66d9ef";
+static char tag4bgcolor[] = "#272822";
+static char tag5fgcolor[] = "#ae81ff";
+static char tag5bgcolor[] = "#272822";
+static char tag6fgcolor[] = "#f8f8f2";
+static char tag6bgcolor[] = "#272822";
+static char tag7fgcolor[] = "#75715e";
+static char tag7bgcolor[] = "#272822";
+static char tag8fgcolor[] = "#f4bf75";
+static char tag8bgcolor[] = "#272822";
+static char tag9fgcolor[] = "#a1efe4";
+static char tag9bgcolor[] = "#272822";
+static char layoutfgcolor[] = "#ae81ff";
+static char layoutbgcolor[] = "#272822";
+#endif
+
 #if BAR_FLEXWINTITLE_PATCH
 static char normTTBbgcolor[] = "#330000";
 static char normLTRbgcolor[] = "#330033";
@@ -320,6 +343,20 @@ static const unsigned int alphas[][3] = {
     [SchemeScratchSel] = {OPAQUE, baralpha, borderalpha},
     [SchemeScratchNorm] = {OPAQUE, baralpha, borderalpha},
 #endif // RENAMED_SCRATCHPADS_PATCH
+
+#if BAR_COLORFULTAGS_PATCH
+    [SchemeTag1] = {OPAQUE, baralpha, borderalpha},
+    [SchemeTag2] = {OPAQUE, baralpha, borderalpha},
+    [SchemeTag3] = {OPAQUE, baralpha, borderalpha},
+    [SchemeTag4] = {OPAQUE, baralpha, borderalpha},
+    [SchemeTag5] = {OPAQUE, baralpha, borderalpha},
+    [SchemeTag6] = {OPAQUE, baralpha, borderalpha},
+    [SchemeTag7] = {OPAQUE, baralpha, borderalpha},
+    [SchemeTag8] = {OPAQUE, baralpha, borderalpha},
+    [SchemeTag9] = {OPAQUE, baralpha, borderalpha},
+    [SchemeLayout] = {OPAQUE, baralpha, borderalpha},
+#endif // BAR_COLORFULTAGS_PATCH
+
 #if BAR_FLEXWINTITLE_PATCH
     [SchemeFlexActTTB] = {OPAQUE, baralpha, borderalpha},
     [SchemeFlexActLTR] = {OPAQUE, baralpha, borderalpha},
@@ -391,6 +428,20 @@ static char *colors[][ColCount] = {
     [SchemeScratchNorm] = {scratchnormfgcolor, scratchnormbgcolor,
                            scratchnormbordercolor, scratchnormfloatcolor},
 #endif // RENAMED_SCRATCHPADS_PATCH
+
+#if BAR_COLORFULTAGS_PATCH
+    [SchemeTag1] = {tag1fgcolor, tag1bgcolor, c000000},
+    [SchemeTag2] = {tag2fgcolor, tag2bgcolor, c000000},
+    [SchemeTag3] = {tag3fgcolor, tag3bgcolor, c000000},
+    [SchemeTag4] = {tag4fgcolor, tag4bgcolor, c000000},
+    [SchemeTag5] = {tag5fgcolor, tag5bgcolor, c000000},
+    [SchemeTag6] = {tag6fgcolor, tag6bgcolor, c000000},
+    [SchemeTag7] = {tag7fgcolor, tag7bgcolor, c000000},
+    [SchemeTag8] = {tag8fgcolor, tag8bgcolor, c000000},
+    [SchemeTag9] = {tag9fgcolor, tag9bgcolor, c000000},
+    [SchemeLayout] = {layoutfgcolor, layoutbgcolor, c000000},
+#endif // BAR_COLORFULTAGS_PATCH
+
 #if BAR_FLEXWINTITLE_PATCH
     [SchemeFlexActTTB] = {titleselfgcolor, actTTBbgcolor, actTTBbgcolor,
                           c000000},
@@ -499,6 +550,9 @@ static const char *const autostart[] = {
 
 #if RENAMED_SCRATCHPADS_PATCH
 static const char *scratchpadcmd[] = {"s", "st", "-n", "spterm", NULL};
+static const char *spcmd2[] = {
+    "c",  TERMINAL, "-n", "spcalc", "-f",  "monospace:size=16",
+    "-g", "50x20",  "-e", "bc",     "-lq", NULL};
 #elif SCRATCHPADS_PATCH
 const char *spcmd1[] = {"st", "-n", "spterm", "-g", "120x34", NULL};
 static Sp scratchpads[] = {
@@ -546,7 +600,8 @@ static char *tagicons[][NUMTAGS] =
 #endif // NAMETAG_PATCH
     {
         [DEFAULT_TAGS] = {"1", "2", "3", "4", "5", "6", "7", "8", "9"},
-        [ALTERNATIVE_TAGS] = {"A", "B", "C", "D", "E", "F", "G", "H", "I"},
+        [ALTERNATIVE_TAGS] = {"", "", "", "", "", "F", "G", "H",
+                              ""},
         [ALT_TAGS_DECORATION] = {"<1>", "<2>", "<3>", "<4>", "<5>", "<6>",
                                  "<7>", "<8>", "<9>"},
     };
@@ -599,6 +654,8 @@ static const Rule rules[] = {
 #if RENAMED_SCRATCHPADS_PATCH
                             RULE(.instance = "spterm", .scratchkey = 's',
                                  .isfloating = 1)
+                                RULE(.instance = "spcalc", .scratchkey = 'c',
+                                     .isfloating = 1)
 #elif SCRATCHPADS_PATCH
                             RULE(.instance = "spterm", .tags = SPTAG(0),
                                  .isfloating = 1)
@@ -1087,7 +1144,7 @@ static const Key keys[] = {
     {MODKEY | ControlMask, XK_b, tabmode, {-1}},
 #endif // TAB_PATCH
 #if FOCUSMASTER_PATCH || FOCUSMASTER_RETURN_PATCH
-    {MODKEY | ControlMask, XK_space, focusmaster, {0}},
+    {MODKEY, XK_space, focusmaster, {0}},
 #endif // FOCUSMASTER_PATCH / FOCUSMASTER_RETURN_PATCH
 #if STACKER_PATCH
     STACKKEYS(MODKEY, focus) STACKKEYS(MODKEY | ShiftMask, push)
@@ -1188,22 +1245,22 @@ static const Key keys[] = {
      {.v = &default_inset}},
 #endif // INSETS_PATCH
 #if VANITYGAPS_PATCH
-    {MODKEY | Mod4Mask, XK_z, incrgaps, {.i = +1}},
-    {MODKEY | Mod4Mask | ShiftMask, XK_z, incrgaps, {.i = -1}},
-    {MODKEY | Mod4Mask, XK_i, incrigaps, {.i = +1}},
-    {MODKEY | Mod4Mask | ShiftMask, XK_i, incrigaps, {.i = -1}},
-    {MODKEY | Mod4Mask, XK_o, incrogaps, {.i = +1}},
-    {MODKEY | Mod4Mask | ShiftMask, XK_o, incrogaps, {.i = -1}},
-    {MODKEY | Mod4Mask, XK_6, incrihgaps, {.i = +1}},
-    {MODKEY | Mod4Mask | ShiftMask, XK_6, incrihgaps, {.i = -1}},
-    {MODKEY | Mod4Mask, XK_7, incrivgaps, {.i = +1}},
-    {MODKEY | Mod4Mask | ShiftMask, XK_7, incrivgaps, {.i = -1}},
-    {MODKEY | Mod4Mask, XK_8, incrohgaps, {.i = +1}},
-    {MODKEY | Mod4Mask | ShiftMask, XK_8, incrohgaps, {.i = -1}},
-    {MODKEY | Mod4Mask, XK_9, incrovgaps, {.i = +1}},
-    {MODKEY | Mod4Mask | ShiftMask, XK_9, incrovgaps, {.i = -1}},
-    {MODKEY | Mod4Mask, XK_0, togglegaps, {0}},
-    {MODKEY | Mod4Mask | ShiftMask, XK_0, defaultgaps, {0}},
+    {MODKEY, XK_z, incrgaps, {.i = +1}},
+    {MODKEY | ShiftMask, XK_z, incrgaps, {.i = -1}},
+    {MODKEY, XK_i, incrigaps, {.i = +1}},
+    {MODKEY | ShiftMask, XK_i, incrigaps, {.i = -1}},
+    {MODKEY, XK_o, incrogaps, {.i = +1}},
+    {MODKEY | ShiftMask, XK_o, incrogaps, {.i = -1}},
+    {MODKEY, XK_6, incrihgaps, {.i = +1}},
+    {MODKEY | ShiftMask, XK_6, incrihgaps, {.i = -1}},
+    {MODKEY, XK_7, incrivgaps, {.i = +1}},
+    {MODKEY | ShiftMask, XK_7, incrivgaps, {.i = -1}},
+    {MODKEY, XK_8, incrohgaps, {.i = +1}},
+    {MODKEY | ShiftMask, XK_8, incrohgaps, {.i = -1}},
+    {MODKEY, XK_9, incrovgaps, {.i = +1}},
+    {MODKEY | ShiftMask, XK_9, incrovgaps, {.i = -1}},
+    {MODKEY, XK_0, togglegaps, {0}},
+    {MODKEY | ShiftMask, XK_0, defaultgaps, {0}},
 #endif // VANITYGAPS_PATCH
 #if ALT_TAB_PATCH
     {Mod1Mask, XK_Tab, alttabstart, {0}},
@@ -1276,8 +1333,7 @@ static const Key keys[] = {
 #endif // XRDB_PATCH
     {MODKEY, XK_t, setlayout, {.v = &layouts[0]}},
     {MODKEY, XK_f, setlayout, {.v = &layouts[1]}},
-// { MODKEY,                       XK_m,          setlayout,              {.v =
-// &layouts[2]} },
+    {MODKEY, XK_m, setlayout, {.v = &layouts[2]}},
 #if COLUMNS_LAYOUT
     {MODKEY, XK_c, setlayout, {.v = &layouts[3]}},
 #endif // COLUMNS_LAYOUT
@@ -1319,8 +1375,12 @@ static const Key keys[] = {
      mirrorlayout,
      {0}}, /* flextile, flip master and stack areas */
 #endif     // FLEXTILE_DELUXE_LAYOUT
-    {MODKEY, XK_space, setlayout, {0}},
+    // {MODKEY, XK_space, setlayout, {0}},
     {MODKEY | ShiftMask, XK_space, togglefloating, {0}},
+    {MODKEY | ControlMask,
+     XK_space,
+     spawn,
+     {.v = (const char *[]){"kbselect", NULL}}},
 #if MAXIMIZE_PATCH
     {MODKEY | ControlMask | ShiftMask, XK_h, togglehorizontalmax, {0}},
     {MODKEY | ControlMask | ShiftMask, XK_l, togglehorizontalmax, {0}},
@@ -1332,8 +1392,8 @@ static const Key keys[] = {
     {MODKEY | ShiftMask, XK_Escape, togglenomodbuttons, {0}},
 #endif // NO_MOD_BUTTONS_PATCH
 #if RENAMED_SCRATCHPADS_PATCH
-    {MODKEY, XK_grave, togglescratch, {.v = scratchpadcmd}},
-    {MODKEY | ControlMask, XK_grave, setscratch, {.v = scratchpadcmd}},
+    {MODKEY, XK_dead_grave, togglescratch, {.v = spcmd2}},
+    {MODKEY | ControlMask, XK_Return, setscratch, {.v = scratchpadcmd}},
     {MODKEY | ShiftMask, XK_Return, togglescratch, {.v = scratchpadcmd}},
 #elif SCRATCHPADS_PATCH
     {MODKEY, XK_grave, togglescratch, {.ui = 0}},
@@ -1367,11 +1427,10 @@ static const Key keys[] = {
     {MODKEY, XK_0, view, {.ui = ~0}},
     {MODKEY | ShiftMask, XK_0, tag, {.ui = ~0}},
 #endif // SCRATCHPAD_ALT_1_PATCH
-// { MODKEY,                       XK_comma,      focusmon,               {.i =
-// -1 } }, { MODKEY,                       XK_period,     focusmon, {.i = +1 }
-// }, { MODKEY|ShiftMask,             XK_comma,      tagmon,                 {.i
-// = -1 } }, { MODKEY|ShiftMask,             XK_period,     tagmon, {.i = +1 }
-// },
+    {MODKEY, XK_comma, focusmon, {.i = -1}},
+    {MODKEY, XK_period, focusmon, {.i = +1}},
+    {MODKEY | ShiftMask, XK_comma, tagmon, {.i = -1}},
+    {MODKEY | ShiftMask, XK_period, tagmon, {.i = +1}},
 #if FOCUSADJACENTTAG_PATCH
     {MODKEY,
      XK_Left,
@@ -1427,7 +1486,7 @@ static const Key keys[] = {
     {MODKEY | Mod4Mask | ControlMask, XK_period, tagswapmon, {.i = -1}},
 #endif // TAGSWAPMON_PATCH
 #if BAR_ALTERNATIVE_TAGS_PATCH
-    {MODKEY, XK_n, togglealttag, {0}},
+    {MODKEY | ControlMask, XK_n, togglealttag, {0}},
 #endif // BAR_ALTERNATIVE_TAGS_PATCH
 #if NAMETAG_PATCH
     {MODKEY | ShiftMask, XK_n, nametag, {0}},
@@ -1613,6 +1672,11 @@ static const Key keys[] = {
 #endif // MPDCONTROL_PATCH
     // LUKESMYTH XYZ
     {MODKEY, XK_Return, spawn, {.v = termcmd}},
+    {MODKEY, XK_v, spawn,
+     SHCMD(
+         "sudo systemctl start wg-quick@proton-br; pkill -RTMIN+4 dwmblocks")},
+    {MODKEY | ShiftMask, XK_v, spawn,
+     SHCMD("sudo systemctl stop wg-quick@proton-br; pkill -RTMIN+4 dwmblocks")},
     {MODKEY, XK_minus, spawn,
      SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-; kill -44 $(pidof "
            "dwmblocks)")},
@@ -1644,27 +1708,30 @@ static const Key keys[] = {
      XK_r,
      spawn,
      {.v = (const char *[]){TERMINAL, "-e", "htop", NULL}}},
-    {MODKEY, XK_p, spawn, {.v = (const char *[]){"mpc", "toggle", NULL}}},
-    {MODKEY | ShiftMask, XK_p, spawn, SHCMD("mpc pause; pauseallmpv")},
+    {MODKEY,
+     XK_p,
+     spawn,
+     {.v = (const char *[]){"playerctl", "play-pause", NULL}}},
+    {MODKEY | ShiftMask, XK_p, spawn, SHCMD("playerctl pause")},
     {MODKEY | ShiftMask, XK_n, spawn,
      SHCMD(TERMINAL " -e newsboat ; pkill -RTMIN+6 dwmblocks")},
-    {MODKEY,
-     XK_m,
-     spawn,
-     {.v = (const char *[]){TERMINAL, "-e", "ncmpcpp", NULL}}},
-    {MODKEY | ShiftMask, XK_m, spawn,
-     SHCMD("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle; kill -44 $(pidof "
-           "dwmblocks)")},
-    {MODKEY, XK_comma, spawn, {.v = (const char *[]){"mpc", "prev", NULL}}},
+    {MODKEY | ShiftMask, XK_m, spawn, {.v = (const char *[]){"spotify-launcher"}}},
     {MODKEY | ShiftMask,
-     XK_comma,
+     XK_h,
      spawn,
-     {.v = (const char *[]){"mpc", "seek", "0%", NULL}}},
-    {MODKEY, XK_period, spawn, {.v = (const char *[]){"mpc", "next", NULL}}},
+     {.v = (const char *[]){"playerctl", "previous", NULL}}},
+    // {MODKEY | ShiftMask,
+    //  XK_comma,
+    //  spawn,
+    //  {.v = (const char *[]){"mpc", "seek", "0%", NULL}}},
     {MODKEY | ShiftMask,
-     XK_period,
+     XK_l,
      spawn,
-     {.v = (const char *[]){"mpc", "repeat", NULL}}},
+     {.v = (const char *[]){"playerctl", "next", NULL}}},
+    // {MODKEY | ShiftMask,
+    //  XK_period,
+    //  spawn,
+    //  {.v = (const char *[]){"mpc", "repeat", NULL}}},
     {MODKEY, XK_F1, spawn,
      SHCMD("groff -mom /usr/local/share/dwm/larbs.mom -Tpdf | zathura -")},
     {MODKEY, XK_F2, spawn, {.v = (const char *[]){"tutorialvids", NULL}}},
@@ -1672,7 +1739,7 @@ static const Key keys[] = {
     {MODKEY, XK_F4, spawn,
      SHCMD(TERMINAL " -e pulsemixer; kill -44 $(pidof dwmblocks)")},
     {MODKEY, XK_F5, xrdb, {.v = NULL}},
-    {MODKEY, XK_F6, spawn, {.v = (const char *[]){"torwrap", NULL}}},
+    {MODKEY, XK_F6, spawn, {.v = (const char *[]){"dmenuunicode", NULL}}},
     {MODKEY, XK_F7, spawn, {.v = (const char *[]){"td-toggle", NULL}}},
     {MODKEY, XK_F8, spawn, {.v = (const char *[]){"mailsync", NULL}}},
     {MODKEY, XK_F9, spawn, {.v = (const char *[]){"mounter", NULL}}},
@@ -1703,22 +1770,34 @@ static const Key keys[] = {
     {0, XF86XK_AudioLowerVolume, spawn,
      SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%+ && wpctl set-volume "
            "@DEFAULT_AUDIO_SINK@ 3%-; kill -44 $(pidof dwmblocks)")},
-    {0, XF86XK_AudioPrev, spawn, {.v = (const char *[]){"mpc", "prev", NULL}}},
-    {0, XF86XK_AudioNext, spawn, {.v = (const char *[]){"mpc", "next", NULL}}},
+    {0,
+     XF86XK_AudioPrev,
+     spawn,
+     {.v = (const char *[]){"playerctl", "previous", NULL}}},
+    {0,
+     XF86XK_AudioNext,
+     spawn,
+     {.v = (const char *[]){"playerctl", "next", NULL}}},
     {0,
      XF86XK_AudioPause,
      spawn,
      {.v = (const char *[]){"mpc", "pause", NULL}}},
-    {0, XF86XK_AudioPlay, spawn, {.v = (const char *[]){"mpc", "play", NULL}}},
-    {0, XF86XK_AudioStop, spawn, {.v = (const char *[]){"mpc", "stop", NULL}}},
+    {0,
+     XF86XK_AudioPlay,
+     spawn,
+     {.v = (const char *[]){"playerctl", "play", NULL}}},
+    {0,
+     XF86XK_AudioStop,
+     spawn,
+     {.v = (const char *[]){"playerctl", "stop", NULL}}},
     {0,
      XF86XK_AudioRewind,
      spawn,
-     {.v = (const char *[]){"mpc", "seek", "-10", NULL}}},
+     {.v = (const char *[]){"playerctl", "seek", "10-", NULL}}},
     {0,
      XF86XK_AudioForward,
      spawn,
-     {.v = (const char *[]){"mpc", "seek", "+10", NULL}}},
+     {.v = (const char *[]){"playerctl", "seek", "10+", NULL}}},
     {0,
      XF86XK_AudioMedia,
      spawn,
@@ -1738,7 +1817,7 @@ static const Key keys[] = {
     {0, XF86XK_WWW, spawn, {.v = (const char *[]){BROWSER, NULL}}},
     {0, XF86XK_DOS, spawn, {.v = termcmd}},
     {0, XF86XK_ScreenSaver, spawn,
-     SHCMD("slock & xset dpms force off; mpc pause; pauseallmpv")},
+     SHCMD("slock & xset dpms force off; playerctl pause; pauseallmpv")},
     {0,
      XF86XK_TaskPane,
      spawn,
