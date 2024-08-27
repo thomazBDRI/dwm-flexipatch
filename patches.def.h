@@ -102,20 +102,20 @@
  * https://gitlab.com/udiboy1209-suckless/dwm/-/commit/071f5063e8ac4280666828179f92788d893eea40#4b1a539194be7467cefbda22f675a3b7c19ceca7
  * https://dwm.suckless.org/patches/statuscolors/
  */
-#define BAR_POWERLINE_STATUS_PATCH 1
+#define BAR_POWERLINE_STATUS_PATCH 0
 
 /* Adds powerline arrows for the tags.
  * https://gitlab.com/udiboy1209-suckless/dwm/-/commit/071f5063e8ac4280666828179f92788d893eea40#4b1a539194be7467cefbda22f675a3b7c19ceca7
  */
-#define BAR_POWERLINE_TAGS_PATCH 1
+#define BAR_POWERLINE_TAGS_PATCH 0
 
 /* Alters the tags powerline to use forward slash instead of arrows */
-#define BAR_POWERLINE_TAGS_SLASH_PATCH 1
+#define BAR_POWERLINE_TAGS_SLASH_PATCH 0
 
 /* This patch turns the titlebar area into a mfact-respecting tabbar showing
  * each client's title. https://dwm.suckless.org/patches/bartabgroups/
  */
-#define BAR_TABGROUPS_PATCH 1
+#define BAR_TABGROUPS_PATCH 0
 
 /* This patch adds an option to place tags in rows like in many other window
  * managers. https://dwm.suckless.org/patches/taggrid/
@@ -142,7 +142,7 @@
 #define BAR_TAGPREVIEW_PATCH 0
 
 /* Show status in bar */
-#define BAR_STATUS_PATCH 1
+#define BAR_STATUS_PATCH 0
 
 /* This patch adds a clickable button to the left hand side of the statusbar.
  * https://dwm.suckless.org/patches/statusbutton/
@@ -153,7 +153,7 @@
  * button and position when clicking the status bar. Refer to the website for
  * usage. https://dwm.suckless.org/patches/statuscmd/
  */
-#define BAR_STATUSCMD_PATCH 0
+#define BAR_STATUSCMD_PATCH 1
 
 /* Status2d allows colors and rectangle drawing in your dwm status bar.
  * This patch is incompatible with the statuscolors patch which takes
@@ -185,12 +185,12 @@
 /* Show tag symbols + class of master window in the bar.
  * https://dwm.suckless.org/patches/taglabels/
  */
-#define BAR_TAGLABELS_PATCH 1
+#define BAR_TAGLABELS_PATCH 0
 
 /* This patch underlines the selected tag, or optionally all tags.
  * https://dwm.suckless.org/patches/underlinetags/
  */
-#define BAR_UNDERLINETAGS_PATCH 0
+#define BAR_UNDERLINETAGS_PATCH 1
 
 /* This patch adds the window icon next to the window title in the bar.
  *
@@ -212,7 +212,7 @@
 #define BAR_WINICON_PATCH 0
 
 /* Show window title in bar */
-#define BAR_WINTITLE_PATCH 1
+#define BAR_WINTITLE_PATCH 0
 
 /* Shows window titles in the bar, but only for floating clients.
  * This depends on code from the flexwintitle patch.
@@ -310,6 +310,11 @@
  */
 #define BAR_CLIENTINDICATOR_PATCH N / A
 
+/* Allow configuration of colors for each tag. Looks good with the underline
+ * patch. https://github.com/fitrh/dwm/issues/1
+ */
+#define BAR_COLORFULTAGS_PATCH 0
+
 /* Updates the position of dmenu to match that of the bar. I.e. if topbar is 0
  * then dmenu will appear at the bottom and if 1 then dmenu will appear at the
  * top. https://dwm.suckless.org/patches/dmenumatchtop
@@ -374,7 +379,7 @@
 /* This patch adds vertical and horizontal space between the statusbar and the
  * edge of the screen. https://dwm.suckless.org/patches/barpadding/
  */
-#define BAR_PADDING_PATCH 1
+#define BAR_PADDING_PATCH 0
 
 /* Same as barpadding patch but specifically tailored for the vanitygaps patch
  * in that the outer bar padding is derived from the vanitygaps settings. In
@@ -382,7 +387,7 @@
  * toggled. Increasing or decreasing gaps during runtime will not affect the bar
  * padding.
  */
-#define BAR_PADDING_VANITYGAPS_PATCH 1
+#define BAR_PADDING_VANITYGAPS_PATCH 0
 
 /* Smart bar padding patch that automatically adjusts the padding when there is
  * only one client on the monitor. Works well with vanitygaps and barpadding
@@ -661,7 +666,7 @@
  * than applying to all clients globally. Also see the selectivefakefullscreen
  * option that adds a rule option to enabled this on client startup.
  */
-#define FAKEFULLSCREEN_CLIENT_PATCH 1
+#define FAKEFULLSCREEN_CLIENT_PATCH 0
 
 /* This patch adds a float rule allowing the size and position of floating
  * windows to be specified It also allows the size and position of floating
@@ -791,7 +796,7 @@
  * ensures that in such scenarios the previous window loses fullscreen.
  * https://github.com/bakkeby/patches/blob/master/dwm/dwm-losefullscreen-6.2.diff
  */
-#define LOSEFULLSCREEN_PATCH 1
+#define LOSEFULLSCREEN_PATCH 0
 
 /* This patch adds helper functions for maximizing, horizontally and vertically,
  * floating windows using keybindings.
@@ -942,12 +947,12 @@
  * monitor (default).
  * https://dwm.suckless.org/patches/pertag/
  */
-#define PERTAG_PATCH 0
+#define PERTAG_PATCH 1
 
 /* Option to enable gaps on a per tag basis rather than globally.
  * Depends on both pertag and vanitygaps patches being enabled.
  */
-#define PERTAG_VANITYGAPS_PATCH 0
+#define PERTAG_VANITYGAPS_PATCH 1
 
 /* This patch allows configuring vanity gaps on a per-monitor basis rather than
  * all monitors (default).
@@ -988,7 +993,7 @@
  *
  * https://github.com/bakkeby/patches/wiki/renamedscratchpads
  */
-#define RENAMED_SCRATCHPADS_PATCH 0
+#define RENAMED_SCRATCHPADS_PATCH 1
 
 /* Renamed scratchpads option to auto-hide scratchpads when moving to a
  * different tag. This behaviour is similar to that of the (multiple)
@@ -1043,7 +1048,7 @@
  * in your config.h.
  * https://github.com/mitchweaver/suckless/blob/master/dwm/patches/mitch-06-rounded_corners-f04cac6d6e39cd9e3fc4fae526e3d1e8df5e34b2.patch
  */
-#define ROUNDED_CORNERS_PATCH 1
+#define ROUNDED_CORNERS_PATCH 0
 
 /* This patch saves size and position of every floating window before it is
  * forced into tiled mode. If the window is made floating again then the old
