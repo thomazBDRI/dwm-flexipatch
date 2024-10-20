@@ -553,6 +553,8 @@ static const char *scratchpadcmd[] = {"s", "st", "-n", "spterm", NULL};
 static const char *spcmd2[] = {
     "c",  TERMINAL, "-n", "spcalc", "-f",  "monospace:size=16",
     "-g", "50x20",  "-e", "bc",     "-lq", NULL};
+static const char *spcmd3[] = {
+    "d",  TERMINAL, "-n", "spobsidian", "-g", "120x30", "-e", "nvim", "~/Obsidian", NULL};
 #elif SCRATCHPADS_PATCH
 const char *spcmd1[] = {"st", "-n", "spterm", "-g", "120x34", NULL};
 static Sp scratchpads[] = {
@@ -646,19 +648,21 @@ static const Rule rules[] = {
      *	_NET_WM_WINDOW_TYPE(ATOM) = wintype
      */
     RULE(.wintype = WTYPE "DIALOG", .isfloating = 1)
-        RULE(.wintype = WTYPE "UTILITY", .isfloating = 1)
-            RULE(.wintype = WTYPE "TOOLBAR", .isfloating = 1)
-                RULE(.wintype = WTYPE "SPLASH", .isfloating = 1)
-                    RULE(.class = "Gimp", .tags = 1 << 4)
-                        RULE(.class = "Firefox", .tags = 1 << 7)
+    RULE(.wintype = WTYPE "UTILITY", .isfloating = 1)
+    RULE(.wintype = WTYPE "TOOLBAR", .isfloating = 1)
+    RULE(.wintype = WTYPE "SPLASH", .isfloating = 1)
+    RULE(.class = "io.elementary.desktop.agent-polkit", .isfloating = 1)
+    RULE(.class = "Librewolf", .tags = 1 << 1)
 #if RENAMED_SCRATCHPADS_PATCH
-                            RULE(.instance = "spterm", .scratchkey = 's',
-                                 .isfloating = 1)
-                                RULE(.instance = "spcalc", .scratchkey = 'c',
-                                     .isfloating = 1)
+    RULE(.instance = "spterm", .scratchkey = 's',
+        .isfloating = 1)
+    RULE(.instance = "spcalc", .scratchkey = 'c',
+        .isfloating = 1)
+    RULE(.instance = "spobsidian", .scratchkey = 'd',
+        .isfloating = 1)
 #elif SCRATCHPADS_PATCH
-                            RULE(.instance = "spterm", .tags = SPTAG(0),
-                                 .isfloating = 1)
+    RULE(.instance = "spterm", .tags = SPTAG(0),
+        .isfloating = 1)
 #endif // SCRATCHPADS_PATCH
 };
 
@@ -1251,21 +1255,21 @@ static const Key keys[] = {
     {MODKEY | ShiftMask, XK_i, incrigaps, {.i = -1}},
     {MODKEY, XK_o, incrogaps, {.i = +1}},
     {MODKEY | ShiftMask, XK_o, incrogaps, {.i = -1}},
-    {MODKEY, XK_6, incrihgaps, {.i = +1}},
-    {MODKEY | ShiftMask, XK_6, incrihgaps, {.i = -1}},
-    {MODKEY, XK_7, incrivgaps, {.i = +1}},
-    {MODKEY | ShiftMask, XK_7, incrivgaps, {.i = -1}},
-    {MODKEY, XK_8, incrohgaps, {.i = +1}},
-    {MODKEY | ShiftMask, XK_8, incrohgaps, {.i = -1}},
-    {MODKEY, XK_9, incrovgaps, {.i = +1}},
-    {MODKEY | ShiftMask, XK_9, incrovgaps, {.i = -1}},
-    {MODKEY, XK_0, togglegaps, {0}},
-    {MODKEY | ShiftMask, XK_0, defaultgaps, {0}},
+    // {MODKEY, XK_6, incrihgaps, {.i = +1}},
+    // {MODKEY | ShiftMask, XK_6, incrihgaps, {.i = -1}},
+    // {MODKEY, XK_7, incrivgaps, {.i = +1}},
+    // {MODKEY | ShiftMask, XK_7, incrivgaps, {.i = -1}},
+    // {MODKEY, XK_8, incrohgaps, {.i = +1}},
+    // {MODKEY | ShiftMask, XK_8, incrohgaps, {.i = -1}},
+    // {MODKEY, XK_9, incrovgaps, {.i = +1}},
+    // {MODKEY | ShiftMask, XK_9, incrovgaps, {.i = -1}},
+    {MODKEY | ControlMask, XK_z, togglegaps, {0}},
+    {MODKEY | ShiftMask | ControlMask, XK_z, defaultgaps, {0}},
 #endif // VANITYGAPS_PATCH
 #if ALT_TAB_PATCH
     {Mod1Mask, XK_Tab, alttabstart, {0}},
 #else
-    {MODKEY, XK_Tab, view, {0}},
+    // {MODKEY, XK_Tab, view, {0}},
 #endif // ALT_TAB_PATCH
 #if SHIFTTAG_PATCH
     {MODKEY | ShiftMask,
@@ -1286,7 +1290,7 @@ static const Key keys[] = {
     {MODKEY | ShiftMask, XK_backslash, shiftview, {.i = +1}},
 #endif // SHIFTVIEW_PATCH
 #if SHIFTVIEW_CLIENTS_PATCH
-    {MODKEY | Mod4Mask, XK_Tab, shiftviewclients, {.i = -1}},
+    {MODKEY, XK_Tab, shiftviewclients, {.i = -1}},
     {MODKEY | Mod4Mask, XK_backslash, shiftviewclients, {.i = +1}},
 #endif // SHIFTVIEW_CLIENTS_PATCH
 #if SHIFTBOTH_PATCH
@@ -1392,13 +1396,13 @@ static const Key keys[] = {
     {MODKEY | ShiftMask, XK_Escape, togglenomodbuttons, {0}},
 #endif // NO_MOD_BUTTONS_PATCH
 #if RENAMED_SCRATCHPADS_PATCH
-    {MODKEY, XK_dead_grave, togglescratch, {.v = spcmd2}},
-    {MODKEY | ControlMask, XK_Return, setscratch, {.v = scratchpadcmd}},
+    {MODKEY, XK_apostrophe, togglescratch, {.v = spcmd2}},
     {MODKEY | ShiftMask, XK_Return, togglescratch, {.v = scratchpadcmd}},
+    {MODKEY, XK_g, togglescratch, {.v = spcmd3}},
 #elif SCRATCHPADS_PATCH
     {MODKEY, XK_grave, togglescratch, {.ui = 0}},
     {MODKEY | ControlMask, XK_grave, setscratch, {.ui = 0}},
-    {MODKEY | ShiftMask, XK_grave, removescratch, {.ui = 0}},
+    // {MODKEY, XK_g, removescratch, {.ui = 0}},
 #endif // SCRATCHPADS_PATCH | RENAMED_SCRATCHPADS_PATCH
 #if UNFLOATVISIBLE_PATCH
     {MODKEY | Mod4Mask, XK_space, unfloatvisible, {0}},
